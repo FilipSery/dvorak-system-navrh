@@ -562,21 +562,16 @@ V.zverejneni=()=>{const a=L.filter(l=>l.stav==='Aktivní'||l.stav==='Rezervace')
 /* ---------- WEB ---------- */
 V.web=()=>{const a=L.filter(l=>l.stav==='Aktivní'&&l.web==='ok');return `
  <div class="head"><div><h1 class="h1">Náš web</h1><p class="sub">Nový web trebic-reality.cz bere nabídky přímo z tohoto systému. Nic se nenahrává dvakrát a nic se neztratí.</p></div>
- <div class="acts"><button class="btn" onclick="toast('Otevřel by se web v novém okně.')">${ic('globe')}Otevřít web</button></div></div>
+ <div class="acts"><a class="btn pri" href="web/" target="_blank" rel="noopener" style="text-decoration:none">${ic('globe')}Otevřít web v novém okně</a></div></div>
  <div class="grid g3" style="margin-bottom:1rem">
   <div class="card stat"><div class="n">1 840</div><div class="l">Návštěv webu za 30 dní</div></div>
   <div class="card stat"><div class="n">23</div><div class="l">Dotazů z webu za 30 dní</div></div>
   <div class="card stat"><div class="n">0 s</div><div class="l">Zpoždění změn: nabídka se na webu změní hned</div></div>
  </div>
  <div class="browser"><div class="bbar"><i></i><i></i><i></i><span class="url">🔒 www.trebic-reality.cz</span></div>
-  <div class="wh"><div class="wlogo">REALITY <span>DVOŘÁK</span></div><div class="small" style="color:var(--dv);font-weight:600">${ic('phone','style="width:1rem;height:1rem;vertical-align:-3px"')} +420 723 057 388</div></div>
-  <div class="wnav"><span>Hlavní stránka</span><span>Prodej</span><span>Pronájem</span><span>Novinky</span><span>O nás</span><span>Financování</span><span>Správa nemovitostí</span><span>Kontakt</span></div>
-  <div class="whero"><h2>Realitní kancelář Dvořák s.r.o.</h2><div style="opacity:.9">Prodej, nákup a pronájem nemovitostí na Vysočině již od roku 1993.</div>
-   <div class="wsearch"><div>Druh ▾</div><div>Obec ▾</div><div>Prodej / Pronájem ▾</div><b>Vyhledat</b></div></div>
-  <div style="padding:1.5rem 1.5rem 0;font-weight:700;font-size:1.2rem;color:var(--dv)">Naše nabídka</div>
-  <div class="wgrid">${a.slice(0,6).map(l=>`<div class="wc"><img src="${IMG[l.img]}"><div><b class="small">${l.t}</b><div class="small muted">${l.obec} · ${l.plocha}</div><div class="p">${cena(l)}</div></div></div>`).join('')}</div>
+  <iframe src="web/" title="Nový web trebic-reality.cz" style="display:block;width:100%;height:78vh;min-height:560px;border:0;background:#0E1A2B" loading="lazy"></iframe>
  </div>
- <p class="small muted">Náhled je orientační. Design webu bychom připravili nový, moderní a dobře čitelný i na mobilu. Barvy a logo kanceláře zůstanou.</p>`};
+ <p class="small muted">Toto je živá ukázka nového webu. Dá se v ní klikat, filtrovat i otevírat nemovitosti. Nabídky na něm jsou skutečné, převzaté ze současného webu.</p>`};
 
 /* ---------- NÁPOVĚDA ---------- */
 V.napoveda=()=>`<div class="head"><div><h1 class="h1">Nápověda a podpora</h1><p class="sub">Systém, web i propojení se Sreality máte od jedné firmy. Když cokoli nefunguje, voláte jedno číslo.</p></div></div>
