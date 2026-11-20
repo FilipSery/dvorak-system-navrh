@@ -503,7 +503,7 @@ textarea.in{min-height:120px;resize:vertical}
   </nav>
   <div class="hdr-r">
    <button class="fav-btn" onclick="showFavs()" aria-label="Oblíbené"><svg class="ico" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5C19 15.6 12 20 12 20Z"/></svg><span class="n" id="favN">0</span></button>
-   <a class="btn btn-gold cta" href="#prodat">Ocenit nemovitost</a>
+   <a class="btn btn-gold cta" href="#prodat">Nacenit nemovitost</a>
    <button class="burger" onclick="menu(true)" aria-label="Menu"><svg class="ico" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/></svg></button>
   </div>
  </div>
@@ -519,7 +519,7 @@ textarea.in{min-height:120px;resize:vertical}
   <a href="#tym">O nás</a>
   <a href="#kontakt">Kontakt</a>
  </nav>
- <div class="foot"><a class="btn btn-gold" href="tel:+420723057388">Zavolat +420 723 057 388</a><a class="btn btn-glass" href="#prodat">Ocenit nemovitost zdarma</a></div>
+ <div class="foot"><a class="btn btn-gold" href="tel:+420723057388">Zavolat +420 723 057 388</a><a class="btn btn-glass" href="#prodat">Nacenit nemovitost zdarma</a></div>
 </div>
 
 <main id="top">
@@ -792,7 +792,7 @@ if(matchMedia('(pointer:fine)').matches&&!matchMedia('(prefers-reduced-motion:re
 const CENY={Prodej:[['','Bez limitu'],[3e6,'3 mil. Kč'],[5e6,'5 mil. Kč'],[7e6,'7 mil. Kč'],[1e7,'10 mil. Kč']],Pronájem:[['','Bez limitu'],[1e4,'10 000 Kč'],[15e3,'15 000 Kč'],[2e4,'20 000 Kč']]};
 let hsTyp='Prodej';
 function hsFill(){$('#hsCena').innerHTML=(CENY[hsTyp]||CENY.Prodej).map(([v,t])=>`<option value="${v}">${t}</option>`).join('');hsCount()}
-function hsCount(){if(hsTyp==='prodat'){$('#hsBtn').textContent='Ocenit';return}const c=N.filter(n=>n.typ===hsTyp&&(!$('#hsDruh').value||n.druh===$('#hsDruh').value)&&(!$('#hsLok').value||lokGroup(n)===$('#hsLok').value)&&(!$('#hsCena').value||(n.cena!=null&&n.cena<=+$('#hsCena').value))).length;$('#hsBtn').textContent=`Zobrazit ${c} ${c===1?'nabídku':c>=2&&c<=4?'nabídky':'nabídek'}`}
+function hsCount(){if(hsTyp==='prodat'){$('#hsBtn').textContent='Nacenit';return}const c=N.filter(n=>n.typ===hsTyp&&(!$('#hsDruh').value||n.druh===$('#hsDruh').value)&&(!$('#hsLok').value||lokGroup(n)===$('#hsLok').value)&&(!$('#hsCena').value||(n.cena!=null&&n.cena<=+$('#hsCena').value))).length;$('#hsBtn').textContent=`Zobrazit ${c} ${c===1?'nabídku':c>=2&&c<=4?'nabídky':'nabídek'}`}
 $$('#heroSearch .tabs button').forEach(b=>b.onclick=()=>{$$('#heroSearch .tabs button').forEach(x=>x.classList.toggle('on',x===b));hsTyp=b.dataset.t;hsFill()});
 ['hsDruh','hsLok','hsCena'].forEach(id=>$('#'+id).addEventListener('change',hsCount));
 hsFill();
