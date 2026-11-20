@@ -65,17 +65,15 @@ button{cursor:pointer}
 @media (prefers-reduced-motion:reduce){[data-r]{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 
 /* concept ribbon */
-.ribbon{background:var(--gold-l);color:#6B5232;font-size:.82rem;text-align:center;padding:.5rem 2.5rem;position:relative;z-index:60}
+.ribbon{position:fixed;left:16px;bottom:16px;max-width:380px;background:var(--gold-l);color:#6B5232;font-size:.8rem;line-height:1.45;text-align:left;padding:.75rem 2.4rem .75rem 1rem;border-radius:14px;box-shadow:0 10px 30px rgba(14,26,43,.18);z-index:60}
 .ribbon b{font-weight:700}
-.ribbon button{position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:none;border:0;font-size:1.2rem;color:#6B5232;line-height:1;padding:.2rem .5rem}
+.ribbon button{position:absolute;right:.4rem;top:.4rem;background:none;border:0;font-size:1.2rem;color:#6B5232;line-height:1;padding:.2rem .5rem}
 
 /* header */
 .hdr{position:fixed;left:0;right:0;top:0;z-index:50;transition:background .4s,box-shadow .4s,transform .4s var(--ease),color .4s;color:#fff}
-.hdr.has-ribbon{top:var(--ribbon-h,0px)}
 .hdr .hin{display:flex;align-items:center;gap:2rem;height:84px;transition:height .4s var(--ease)}
 .hdr.solid{background:rgba(251,249,245,.86);backdrop-filter:saturate(1.6) blur(16px);-webkit-backdrop-filter:saturate(1.6) blur(16px);color:var(--tx);box-shadow:0 1px 0 var(--line)}
 .hdr.solid .hin{height:70px}
-.hdr.hide{transform:translateY(-110%)}
 .logo{display:flex;align-items:center;gap:.75rem;text-decoration:none;flex:none}
 .logo svg{width:42px;height:42px;flex:none}
 .logo .wm{font-family:var(--serif);font-size:1.45rem;letter-spacing:.06em;line-height:1;font-weight:500}
@@ -84,7 +82,7 @@ button{cursor:pointer}
 .nav a{text-decoration:none;font-weight:600;font-size:.95rem;position:relative;padding:.3rem 0;opacity:.92}
 .nav a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1.5px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease)}
 .nav a:hover::after{transform:scaleX(1);transform-origin:left}
-.hdr-r{display:flex;align-items:center;gap:.6rem}
+.hdr-r{display:flex;align-items:center;gap:.6rem;margin-left:auto}
 .fav-btn{position:relative;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(255,255,255,.3);background:transparent;color:inherit;transition:.3s}
 .hdr.solid .fav-btn{border-color:var(--line)}
 .fav-btn .n{position:absolute;top:-2px;right:-2px;min-width:20px;height:20px;border-radius:10px;background:var(--gold);color:#fff;font-size:.72rem;font-weight:800;display:grid;place-items:center;padding:0 5px;transform:scale(0);transition:transform .3s var(--ease)}
@@ -190,7 +188,7 @@ button{cursor:pointer}
 .badges{display:flex;gap:.4rem;flex-wrap:wrap}
 
 /* listing filters */
-.filters{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;margin-bottom:1.5rem;position:sticky;top:70px;z-index:20;background:rgba(251,249,245,.92);backdrop-filter:blur(12px);padding:.9rem 0;margin-top:-.9rem}
+.filters{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;margin-bottom:1.8rem;scroll-margin-top:96px}
 .seg{display:inline-flex;background:var(--sand);border-radius:999px;padding:.25rem}
 .seg button{border:0;background:transparent;padding:.55rem 1.05rem;border-radius:999px;font-weight:700;font-size:.9rem;color:var(--tx-2);transition:.25s}
 .seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
@@ -200,7 +198,7 @@ button{cursor:pointer}
 .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
 .sel{border:1.5px solid var(--line);border-radius:999px;padding:.5rem 2.2rem .5rem 1rem;font-weight:600;font-size:.88rem;background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A93A0' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right .9rem center;appearance:none;-webkit-appearance:none;cursor:pointer}
 .filters .count{margin-left:auto;font-weight:700;color:var(--tx-2);font-size:.9rem}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2.2vw,30px)}
+.grid{overflow-anchor:none;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2.2vw,30px)}
 .card{position:relative;cursor:pointer;text-decoration:none;display:block}
 .card .media{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:4/3;background:var(--sand-2)}
 .card .media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .6s var(--ease),transform 1.2s var(--ease)}
@@ -461,7 +459,8 @@ textarea.in{min-height:120px;resize:vertical}
  .float-card{min-width:0;right:0;left:30%;bottom:-4%;padding:.7rem}
  .float-card img{width:46px;height:46px}
  .grid,.team,.similar{grid-template-columns:1fr}
- .filters{position:static;gap:.5rem;margin-top:0}
+ .filters{gap:.5rem;scroll-margin-top:80px}
+ .ribbon{left:12px;right:12px;bottom:12px;max-width:none}
  .filters .count{width:100%;margin:0}
  .opts{grid-template-columns:repeat(3,1fr)}
  .opt{padding:.8rem .3rem;font-size:.85rem}
@@ -481,13 +480,14 @@ textarea.in{min-height:120px;resize:vertical}
  .lb .pv,.lb .nx{top:auto;bottom:24px}
  .mapbox{height:520px}
 }
+@media (max-width:400px){.logo .wm small{display:none}.hdr .hin{gap:.5rem}.hdr-r{gap:.4rem}.fav-btn,.burger{width:40px;height:40px}.ribbon{font-size:.74rem}}
 </style>
 </head>
 <body>
 
 <div class="ribbon" id="ribbon"><b>Návrh nového webu trebic-reality.cz</b> · nabídky, fotky a kontakty jsou skutečné, převzaté ze současného webu. Formuláře v ukázce nic neodesílají.<button aria-label="Zavřít" onclick="closeRibbon()">×</button></div>
 
-<header class="hdr has-ribbon" id="hdr">
+<header class="hdr" id="hdr">
  <div class="wrap hin">
   <a class="logo" href="#top" aria-label="Reality Dvořák – úvod">
    <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="1" y="1" width="46" height="46" rx="13" fill="none" stroke="currentColor" stroke-opacity=".35"/><path d="M11 22 24 11l13 11" fill="none" stroke="#C9A36B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 37V24.5h6.2c4.6 0 7.6 2.6 7.6 6.25S27.8 37 23.2 37H17Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg>
@@ -770,19 +770,10 @@ function sent(ev,msg){ev.preventDefault();const f=ev.target;f.reset&&f.reset();t
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 
 /* ============ ribbon & header ============ */
-function setRibbonH(){const r=$('#ribbon');document.documentElement.style.setProperty('--ribbon-h',(r&&r.offsetParent!==null?r.offsetHeight:0)+'px')}
-function closeRibbon(){$('#ribbon').style.display='none';setRibbonH();store.set('dv-rib',1)}
+function closeRibbon(){$('#ribbon').style.display='none';store.set('dv-rib',1)}
 if(store.get('dv-rib',0)) $('#ribbon').style.display='none';
-setRibbonH(); addEventListener('resize',setRibbonH);
-let lastY=0;
-addEventListener('scroll',()=>{
- const y=scrollY,h=$('#hdr');
- h.classList.toggle('solid',y>40);
- h.classList.toggle('hide',y>600&&y>lastY+4&&!document.body.classList.contains('noscroll'));
- if(y<lastY-4||y<600) h.classList.remove('hide');
- lastY=y;
- const rb=$('#ribbon'); if(rb.style.display!=='none'){h.style.top=Math.max(0,rb.offsetHeight-y)+'px'}
-},{passive:true});
+const hdrUpd=()=>$('#hdr').classList.toggle('solid',scrollY>40);
+addEventListener('scroll',hdrUpd,{passive:true});hdrUpd();
 function menu(o){$('#mnav').classList.toggle('open',o);document.body.style.overflow=o?'hidden':''}
 $$('#mnav a').forEach(a=>a.addEventListener('click',()=>menu(false)));
 
@@ -861,10 +852,12 @@ function render(){
  reveal();
  if(F.view==='map') drawMap(l);
 }
-$$('#fTyp button').forEach(b=>b.onclick=()=>{F.typ=b.dataset.v;onlyFav=false;syncFilters();render()});
-$$('#fDruh .chip').forEach(b=>b.onclick=()=>{F.druh=b.dataset.v;onlyFav=false;syncFilters();render()});
-$('#fLok').onchange=e=>{F.lok=e.target.value;render()};
-$('#fSort').onchange=e=>{F.sort=e.target.value;render()};
+/* překreslení bez poskočení: filtr zůstane na stejném místě obrazovky, karty se ukážou hned */
+function stay(){const f=$('#filters'),t=f.getBoundingClientRect().top;render();$$('#grid [data-r]').forEach(e=>{e.style.transitionDelay='0ms';e.classList.add('vis')});const d=f.getBoundingClientRect().top-t;if(Math.abs(d)>1)scrollBy({top:d,behavior:'instant'})}
+$$('#fTyp button').forEach(b=>b.onclick=()=>{F.typ=b.dataset.v;onlyFav=false;syncFilters();stay()});
+$$('#fDruh .chip').forEach(b=>b.onclick=()=>{F.druh=b.dataset.v;onlyFav=false;syncFilters();stay()});
+$('#fLok').onchange=e=>{F.lok=e.target.value;stay()};
+$('#fSort').onchange=e=>{F.sort=e.target.value;stay()};
 $$('#fView button').forEach(b=>b.onclick=()=>{F.view=b.dataset.v;$$('#fView button').forEach(x=>x.classList.toggle('on',x===b));$('#grid').style.display=F.view==='grid'?'':'none';$('#mapbox').classList.toggle('on',F.view==='map');render()});
 
 function pinIcon(n){return L.divIcon({className:'',html:`<span class="pin" data-id="${n.id}">${priceShort(n)}</span>`,iconSize:[0,0]})}
