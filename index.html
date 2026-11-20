@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dvořák Kancelář</title>
 <meta name="robots" content="noindex, nofollow">
+<title>Dvořák Kancelář</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -211,6 +211,16 @@ tr:hover td{background:#FAFBFD}
 .match{display:flex;gap:.5rem;align-items:center;margin-top:.8rem;padding:.6rem .7rem;background:var(--bg);border-radius:9px}
 .match img{width:56px;height:42px;border-radius:6px;object-fit:cover}
 .kbd{font-size:.75rem;color:var(--tx-3)}
+.adr-list{position:absolute;left:0;right:0;top:4.6rem;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.12);z-index:5;display:none;overflow:hidden}
+.adr-list.show{display:block}
+.adr-list div{padding:.75rem 1rem;cursor:pointer;display:flex;gap:.6rem;align-items:center;border-bottom:1px solid var(--line-2)}
+.adr-list div:hover{background:var(--blue-l)}
+.adr-list small{color:var(--tx-3);margin-left:auto}
+details.more{border:1.5px dashed #D5DBE3;border-radius:12px;padding:.85rem 1rem}
+details.more summary{cursor:pointer;font-weight:600;display:flex;align-items:center;gap:.5rem;list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more[open]{border-style:solid}
+.linkbox{display:flex;align-items:center;gap:.6rem;background:var(--bg);border-radius:10px;padding:.7rem .9rem;font-weight:600;font-size:1.05rem;margin:.6rem 0}
 @media (max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.g2,.g3,.pub,.wgrid{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(3,1fr)}.photos{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:760px){.app{flex-direction:column}.side{width:100%;height:auto;position:sticky;top:64px;z-index:15;flex-direction:row;overflow-x:auto;padding:.5rem .75rem;border-right:0;border-bottom:1px solid var(--line);gap:.35rem}.side .label,.side .sep,.side .sync,.nav .cnt{display:none}.side .add{margin:0;padding:.55rem .8rem;white-space:nowrap;flex:none}.nav{white-space:nowrap;flex:none;padding:.55rem .75rem}.top .tbtn:first-child{display:none}.cal{overflow-x:auto;grid-template-columns:44px repeat(5,minmax(110px,1fr))}main{padding:1rem}.form{grid-template-columns:1fr}.row{grid-template-columns:1fr}.thumb{width:100%;height:170px}.row .side-r{align-items:flex-start}.top .search{display:none}}
 </style>
@@ -230,7 +240,8 @@ tr:hover td{background:#FAFBFD}
   <aside class="side">
     <button class="add" onclick="newListing()"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Přidat nemovitost</button>
     <a class="nav" data-v="prehled"><svg class="i" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Přehled</a>
-    <a class="nav" data-v="nabidky"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M10 21v-3h4v3"/></svg>Nabídky<span class="cnt" id="cntN">12</span></a>
+    <a class="nav" data-v="nabidky"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M10 21v-3h4v3"/></svg>Nabídky<span class="cnt" id="cntN">13</span></a>
+    <a class="nav" data-v="archiv"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg>Archiv<span class="cnt" id="cntA">5</span></a>
     <a class="nav" data-v="poptavky"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Poptávky<span class="cnt">5</span></a>
     <a class="nav" data-v="kontakty"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 12 0v1M16 4a4 4 0 0 1 0 8M22 21v-1a6 6 0 0 0-4-5.6"/></svg>Kontakty</a>
     <a class="nav" data-v="kalendar"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Kalendář<span class="cnt">3 dnes</span></a>
@@ -289,15 +300,23 @@ const L=[
  {id:7,img:'22385984',t:'Prodej novostavby bytu 2+kk v Třebíči, ul. Okružní',typ:'Prodej',druh:'Byt',obec:'Třebíč',ulice:'Okružní',cena:6750000,plocha:'61 m²',disp:'2+kk',stav:'Aktivní',sr:'wait',web:'ok',idnes:'off',views:95,zajem:1,novy:true},
  {id:8,img:'21007292',t:'Prodej zděného bytu 3+1 s garáží v Třebíči, ul. Nádražní',typ:'Prodej',druh:'Byt',obec:'Třebíč',ulice:'Nádražní',cena:null,plocha:'82 m²',disp:'3+1',stav:'Aktivní',sr:'ok',web:'ok',idnes:'off',views:510,zajem:5},
  {id:9,img:'22133240',t:'Komerční areál s pozemky v Petrovicích u Třebíče',typ:'Prodej',druh:'Komerční',obec:'Petrovice',ulice:'',cena:null,plocha:'12 400 m²',stav:'Aktivní',sr:'ok',web:'ok',idnes:'off',views:198,zajem:1},
- {id:10,img:'22082372',t:'Novostavba RD ve Valči, okr. Třebíč',typ:'Prodej',druh:'Dům',obec:'Valeč',ulice:'',cena:null,plocha:'124 m²',stav:'Koncept',sr:'off',web:'off',idnes:'off',views:0,zajem:0},
+ {id:10,img:'22082372',t:'Novostavba RD ve Valči, okr. Třebíč',typ:'Prodej',druh:'Dům',obec:'Valeč',ulice:'',cena:null,plocha:'124 m²',stav:'Příprava',sr:'off',web:'off',idnes:'off',views:0,zajem:0},
  {id:11,img:'21934268',t:'Prodej rozlehlé zemědělské usedlosti v Klučově u Třebíče',typ:'Prodej',druh:'Dům',obec:'Klučov',ulice:'',cena:7500000,plocha:'4 800 m²',stav:'Aktivní',sr:'ok',web:'ok',idnes:'off',views:331,zajem:2},
- {id:12,img:'21852287',t:'Historický dům v Jemnici, ul. nám. Svobody',typ:'Prodej',druh:'Dům',obec:'Jemnice',ulice:'nám. Svobody',cena:3950000,plocha:'290 m²',stav:'Prodáno',sr:'off',web:'off',idnes:'off',views:860,zajem:9},
+ {id:13,img:'22385984',t:'Pronájem novostavby bytu 3+kk se zahrádkou v Třebíči, ul. Okružní',typ:'Pronájem',druh:'Byt',obec:'Třebíč',ulice:'Okružní',cena:18000,mes:true,plocha:'97 m²',disp:'3+kk',stav:'Aktivní',sr:'ok',web:'ok',idnes:'off',views:622,zajem:9},
+ {id:14,img:'22893240',t:'Pronájem kanceláří v Třebíči, Karlovo nám.',typ:'Pronájem',druh:'Komerční',obec:'Třebíč',ulice:'Karlovo nám.',cena:8000,mes:true,plocha:'45 m²',stav:'Aktivní',sr:'ok',web:'ok',idnes:'off',views:244,zajem:3},
+ {id:12,img:'21852287',t:'Historický dům v Jemnici, ul. nám. Svobody',typ:'Prodej',druh:'Dům',obec:'Jemnice',ulice:'nám. Svobody',cena:3950000,plocha:'290 m²',stav:'Realizováno',kdy:'prodáno 14. 11. 2026',sr:'off',web:'off',idnes:'off',views:860,zajem:9},
+ {id:15,img:'22896869',t:'Pronájem zděného bytu 2+kk v Třebíči, ul. Lidická',typ:'Pronájem',druh:'Byt',obec:'Třebíč',ulice:'Lidická',cena:12500,mes:true,plocha:'48 m²',disp:'2+kk',stav:'Realizováno',kdy:'pronajato 3. 10. 2026',sr:'off',web:'off',idnes:'off',views:518,zajem:12},
+ {id:16,img:'21542180',t:'Pronájem zrekonstruovaného bytu 1+1 v Třebíči, U Kuchyňky',typ:'Pronájem',druh:'Byt',obec:'Třebíč',ulice:'U Kuchyňky',cena:8500,mes:true,plocha:'28 m²',disp:'1+1',stav:'Realizováno',kdy:'pronajato 1. 9. 2026',sr:'off',web:'off',idnes:'off',views:301,zajem:7},
+ {id:17,img:'22133240',t:'Pronájem obchodu 12 m² v centru Třebíče, Karlovo nám.',typ:'Pronájem',druh:'Komerční',obec:'Třebíč',ulice:'Karlovo nám.',cena:6000,mes:true,plocha:'12 m²',stav:'Realizováno',kdy:'pronajato 15. 6. 2026',sr:'off',web:'off',idnes:'off',views:190,zajem:2},
+ {id:18,img:'21007292',t:'Prodej bytu 3+1 v Třebíči, ul. Hartmannova',typ:'Prodej',druh:'Byt',obec:'Třebíč',ulice:'Hartmannova',cena:5100000,plocha:'72 m²',disp:'3+1',stav:'Realizováno',kdy:'prodáno 20. 2. 2026',sr:'off',web:'off',idnes:'off',views:1430,zajem:16},
 ];
-const short=t=>{t=t.replace(/^Prodej /,'');return t[0].toUpperCase()+t.slice(1)};
-const kc=n=>n==null?'Cena v RK':n.toLocaleString('cs-CZ')+' Kč';
+const short=t=>{t=t.replace(/^(Prodej|Pronájem) /,'');return t[0].toUpperCase()+t.slice(1)};
+const kc=n=>n==null||n===''?'Cena v RK':n.toLocaleString('cs-CZ')+' Kč';
+const cena=l=>kc(l.cena)+(l.mes&&l.cena?' / měsíc':'');
+const aktivni=()=>L.filter(l=>l.stav==='Aktivní').length;
 const st={ok:['#12A150','zveřejněno'],wait:['#E08A00','nahrává se'],off:['#C5CCD6','nezveřejněno'],err:['#D93636','chyba']};
 const portal=(name,s)=>`<span class="portal" title="${name}: ${st[s][1]}"><span class="s" style="background:${st[s][0]}"></span>${name}</span>`;
-const stavPill=s=>({Aktivní:'p-ok',Rezervace:'p-warn',Prodáno:'p-mute',Koncept:'p-blue'}[s]);
+const stavPill=s=>({Aktivní:'p-ok',Rezervace:'p-warn',Realizováno:'p-mute',Příprava:'p-blue'}[s]);
 
 function toast(t){const e=document.getElementById('toast');document.getElementById('toastT').innerHTML=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),3200)}
 function modal(h){document.getElementById('modalC').innerHTML=h;document.getElementById('modal').classList.add('show')}
@@ -307,8 +326,8 @@ let big=false;document.getElementById('fontBtn').onclick=()=>{big=!big;document.
 
 const V={};
 let cur='prehled';
-function go(v,arg,keep){const y=window.scrollY;cur=v;document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('on',n.dataset.v===v||(v==='editor'&&n.dataset.v==='nabidky')));document.getElementById('view').innerHTML=V[v](arg);window.scrollTo(0,keep?y:0);if(V[v].after)V[v].after(arg)}
-document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>go(n.dataset.v));
+function go(v,arg,keep){const y=window.scrollY;cur=v;const hv=(v==='nabidky'&&filt==='Realizováno')?'archiv':v==='editor'?(E.l&&E.l.stav==='Realizováno'?'archiv':'nabidky'):v;document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('on',n.dataset.v===hv));document.getElementById('view').innerHTML=V[v](arg);window.scrollTo(0,keep?y:0);if(V[v].after)V[v].after(arg)}
+document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{if(n.dataset.v==='nabidky'){filt='Aktivní';ftyp='Vše';fq=''}if(n.dataset.v==='archiv'){ftyp='Vše';fq=''}go(n.dataset.v)});
 
 /* ---------- PŘEHLED ---------- */
 let tasks=[
@@ -320,9 +339,9 @@ let tasks=[
 V.prehled=()=>`
 <div class="head"><div><h1 class="h1">Dobrý den 👋</h1><p class="sub">Čtvrtek 19. listopadu 2026 · Dnes máte 3 prohlídky a 2 nové poptávky.</p></div>
 <div class="acts"><button class="btn big pri" onclick="newListing()"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Přidat nemovitost</button></div></div>
-<div class="banner ok" style="margin-bottom:1rem"><div class="big">${ic('check','style="color:#12A150"')}</div><div><b>Všechny nabídky jsou správně zveřejněné</b>10 nabídek na Sreality a na webu trebic-reality.cz. Žádné chyby, žádné duplicity.</div><button class="btn" style="margin-left:auto" onclick="go('zverejneni')">Zobrazit detail</button></div>
+<div class="banner ok" style="margin-bottom:1rem"><div class="big">${ic('check','style="color:#12A150"')}</div><div><b>Všechny nabídky jsou správně zveřejněné</b>${aktivni()} nabídek na Sreality a na webu trebic-reality.cz. Žádné chyby, žádné duplicity.</div><button class="btn" style="margin-left:auto" onclick="go('zverejneni')">Zobrazit detail</button></div>
 <div class="grid g4">
- <div class="card stat"><div class="ic">${ic('bld')}</div><div class="n">10</div><div class="l">Aktivních nabídek</div></div>
+ <div class="card stat"><div class="ic">${ic('bld')}</div><div class="n">${aktivni()}</div><div class="l">Aktivních nabídek</div></div>
  <div class="card stat"><div class="ic" style="background:#FFF3DF;color:#E08A00">${ic('users')}</div><div class="n">2</div><div class="l">Nové poptávky dnes</div></div>
  <div class="card stat"><div class="ic" style="background:#E4F6EC;color:#12A150">${ic('cal')}</div><div class="n">3</div><div class="l">Prohlídky dnes</div></div>
  <div class="card stat"><div class="ic" style="background:#F1EAFE;color:#7A4CE0">${ic('eye')}</div><div class="n">5 230</div><div class="l">Zobrazení za 30 dní</div></div>
@@ -335,7 +354,7 @@ V.prehled=()=>`
 </div>
 <div class="grid g2 mt">
  <div class="card"><h3>Nejvíce sledované nabídky</h3><div class="list">
-  ${[...L].filter(l=>l.stav!=='Prodáno').sort((a,b)=>b.views-a.views).slice(0,4).map(l=>`<div class="li" style="cursor:pointer;align-items:center" onclick="go('editor',${l.id})"><img src="${IMG[l.img]}" style="width:64px;height:46px;border-radius:7px;object-fit:cover"><div><b>${l.t}</b><div class="muted small">${kc(l.cena)}</div></div><div class="when"><b style="color:var(--tx)">${l.views}</b> zobrazení · ${l.zajem} zájemců</div></div>`).join('')}
+  ${[...L].filter(l=>l.stav!=='Realizováno').sort((a,b)=>b.views-a.views).slice(0,4).map(l=>`<div class="li" style="cursor:pointer;align-items:center" onclick="go('editor',${l.id})"><img src="${IMG[l.img]}" style="width:64px;height:46px;border-radius:7px;object-fit:cover"><div><b>${l.t}</b><div class="muted small">${cena(l)}</div></div><div class="when"><b style="color:var(--tx)">${l.views}</b> zobrazení · ${l.zajem} zájemců</div></div>`).join('')}
  </div></div>
  <div class="card"><h3>Co se stalo</h3><div class="list small">
   <div class="li"><div class="ic" style="background:#E4F6EC;color:#12A150">${ic('check')}</div><div>Byt <b>Okružní</b> nahrán na web</div><div class="when">10:42</div></div>
@@ -347,36 +366,54 @@ V.prehled=()=>`
 function taskHtml(){return tasks.map((t,i)=>`<div class="li"><div class="chk ${t.done?'on':''}" onclick="tasks[${i}].done=!tasks[${i}].done;document.getElementById('tasks').innerHTML=taskHtml()">${t.done?ic('check','style="width:14px;height:14px;stroke-width:3"'):''}</div><div class="${t.done?'done':''}">${t.t}</div><div class="when">${t.d}</div></div>`).join('')}
 
 /* ---------- NABÍDKY ---------- */
-let filt='Aktivní';
+let filt='Aktivní',ftyp='Vše',fq='';
 V.nabidky=()=>{
- const tabs=['Aktivní','Rezervace','Koncept','Prodáno','Vše'];
- const list=L.filter(l=>filt==='Vše'||l.stav===filt);
- return `<div class="head"><div><h1 class="h1">Nabídky</h1><p class="sub">Klikněte na nemovitost a můžete ji upravit. Změny se samy projeví na Sreality i na webu.</p></div>
+ const tabs=['Aktivní','Rezervace','Příprava','Realizováno','Vše'];
+ const arch=filt==='Realizováno';
+ const list=L.filter(l=>(filt==='Vše'||l.stav===filt)&&(ftyp==='Vše'||l.typ===ftyp)&&(!fq||(l.t+' '+l.obec).toLowerCase().includes(fq.toLowerCase())));
+ return `<div class="head"><div><h1 class="h1">${arch?'Archiv – realizované':'Nabídky'}</h1><p class="sub">${arch?'Všechny prodané a pronajaté nemovitosti na jedné stránce. Byt se uvolnil? Klikněte na <b>Znovu nabídnout</b>.':'Klikněte na nemovitost a můžete ji upravit. Změny se samy projeví na Sreality i na webu.'}</p></div>
  <div class="acts"><button class="btn big pri" onclick="newListing()"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Přidat nemovitost</button></div></div>
- <div class="tabs">${tabs.map(t=>`<button class="tab ${t===filt?'on':''}" onclick="filt='${t}';go('nabidky',undefined,true)">${t}<span class="c">${t==='Vše'?L.length:L.filter(l=>l.stav===t).length}</span></button>`).join('')}</div>
+ <div class="tabs">${tabs.map(t=>`<button class="tab ${t===filt?'on':''}" onclick="filt='${t}';go('nabidky',undefined,true)">${t==='Realizováno'?'Realizováno (archiv)':t}<span class="c">${t==='Vše'?L.length:L.filter(l=>l.stav===t).length}</span></button>`).join('')}</div>
+ <div class="flex" style="margin-bottom:1rem;flex-wrap:wrap">${seg2(['Vše','Prodej','Pronájem'],ftyp)}
+  <input class="in" style="max-width:320px;padding:.6rem .9rem" placeholder="Hledat ulici nebo obec…" value="${fq}" oninput="fq=this.value;clearTimeout(window._fq);window._fq=setTimeout(()=>{go('nabidky',undefined,true);const i=document.querySelector('[data-q]');i.focus();i.setSelectionRange(i.value.length,i.value.length)},250)" data-q></div>
  <div class="rows">${list.map(l=>`
   <div class="row" onclick="go('editor',${l.id})">
-   <img class="thumb" src="${IMG[l.img]}" alt="">
-   <div><div class="flex" style="gap:.4rem;margin-bottom:.3rem"><span class="pill ${stavPill(l.stav)}">${l.stav}</span>${l.sleva?'<span class="pill p-err">Sleva</span>':''}${l.novy?'<span class="pill p-blue">Nové</span>':''}</div>
+   <img class="thumb" src="${IMG[l.img]}" alt="" ${l.stav==='Realizováno'?'style="filter:grayscale(.5)"':''}>
+   <div><div class="flex" style="gap:.4rem;margin-bottom:.3rem"><span class="pill ${stavPill(l.stav)}">${l.stav}${l.kdy?' · '+l.kdy:''}</span>${l.sleva?'<span class="pill p-err">Sleva</span>':''}${l.novy?'<span class="pill p-blue">Nové</span>':''}</div>
     <p class="t">${l.t}</p>
     <div class="m"><span>${ic('pin','style="width:1rem;height:1rem"')}${l.obec}</span><span>${ic('area','style="width:1rem;height:1rem"')}${l.plocha}</span><span>${l.druh} · ${l.typ}</span></div>
-    <div class="pr">${kc(l.cena)}</div>
-    <div class="portals">${portal('Sreality',l.sr)}${portal('trebic-reality.cz',l.web)}${portal('iDNES Reality',l.idnes)}</div>
+    <div class="pr">${cena(l)}</div>
+    ${l.stav==='Realizováno'?'<div class="small muted" style="margin-top:.4rem">Fotky, popis i majitel zůstávají uložené.</div>':`<div class="portals">${portal('Sreality',l.sr)}${portal('trebic-reality.cz',l.web)}${portal('iDNES Reality',l.idnes)}</div>`}
    </div>
-   <div class="side-r"><div class="small muted" style="text-align:right"><b style="color:var(--tx)">${l.views}</b> zobrazení<br><b style="color:var(--tx)">${l.zajem}</b> zájemců</div><button class="btn" onclick="event.stopPropagation();go('editor',${l.id})">${ic('edit')}Upravit</button></div>
+   <div class="side-r"><div class="small muted" style="text-align:right"><b style="color:var(--tx)">${l.views}</b> zobrazení<br><b style="color:var(--tx)">${l.zajem}</b> zájemců</div>
+    ${l.stav==='Realizováno'?`<button class="btn pri" onclick="event.stopPropagation();znovu(${l.id})">${ic('refresh')}Znovu nabídnout</button>`:`<button class="btn" onclick="event.stopPropagation();go('editor',${l.id})">${ic('edit')}Upravit</button>`}</div>
   </div>`).join('')||'<div class="card muted">Žádné nabídky v této skupině.</div>'}</div>`;
 };
+function seg2(opts,val){return `<div class="seg">${opts.map(o=>`<button class="${o===val?'on':''}" style="padding:.55rem 1rem" onclick="ftyp='${o}';go('nabidky',undefined,true)">${o}</button>`).join('')}</div>`}
+
+/* ---------- ZNOVU NABÍDNOUT (duplikace) ---------- */
+let D={};
+function znovu(id){const l=L.find(x=>x.id===id);D={id,typ:l.typ,fotky:true,lide:true,popis:true};
+ modal(`<h2>Znovu nabídnout</h2><p class="muted" style="margin-top:0">Vytvoříme novou nabídku ze staré. Nic nemusíte vyplňovat znovu.</p>
+ <div class="match" style="margin:0 0 1rem"><img src="${IMG[l.img]}"><div class="small"><b>${short(l.t)}</b><br><span class="muted">${l.kdy||l.stav} · ${cena(l)}</span></div></div>
+ <div class="f"><label>Co teď nabízíte?</label><div class="seg">${['Pronájem','Prodej'].map(o=>`<button class="${o===l.typ?'on':''}" onclick="D.typ='${o}';[...this.parentElement.children].forEach(c=>c.classList.toggle('on',c===this))">${o}</button>`).join('')}</div></div>
+ <div class="list mt">${[['fotky','Převzít fotky ('+(l.img?5:0)+')'],['popis','Převzít popis inzerátu'],['lide','Převzít majitele a makléře']].map(([k,t])=>`<label class="li" style="cursor:pointer;align-items:center"><input type="checkbox" checked style="width:20px;height:20px" onchange="D.${k}=this.checked"><b>${t}</b></label>`).join('')}</div>
+ <div class="flex mt"><button class="btn" onclick="closeModal()">Zrušit</button><button class="btn pri big" style="margin-left:auto" onclick="znovuOk()">${ic('copy')}Vytvořit novou nabídku</button></div>`)}
+function znovuOk(){const o=L.find(x=>x.id===D.id),nid=Math.max(...L.map(x=>x.id))+1;
+ const n={...o,id:nid,typ:D.typ,stav:'Příprava',kdy:null,views:0,zajem:0,sr:'ok',web:'ok',idnes:'off',novy:true,popis:D.popis?o.popis:'',img:D.fotky?o.img:null,t:o.t.replace(/^(Prodej|Pronájem)/,D.typ)};
+ L.unshift(n);updCnt();closeModal();
+ E={step:3,l:{...n},kopie:true};go('editor');toast('Nová nabídka vytvořena (ID '+(999100+nid)+'). Zkontrolujte cenu a zveřejněte.')}
 
 /* ---------- EDITOR ---------- */
 let E={step:1,l:null};
-function newListing(){E={step:1,l:{id:0,img:null,t:'',typ:'Prodej',druh:'Byt',obec:'Třebíč',ulice:'',cena:'',plocha:'',disp:'',stav:'Koncept',sr:'off',web:'off',idnes:'off',popis:'',isNew:true}};go('editor',0)}
-const steps=['Základní údaje','Parametry','Fotky','Popis','Zveřejnění'];
+function newListing(){E={step:1,l:{id:0,img:null,t:'',typ:'Prodej',druh:'Byt',obec:'',ulice:'',cena:'',plocha:'',disp:'',stav:'Příprava',sr:'ok',web:'ok',idnes:'off',popis:'',isNew:true,vyhr:'Ano'}};go('editor',0)}
+const steps=['Základní údaje','Fotky','Cena a majitel','Popis','Zveřejnění'];
 V.editor=id=>{
  if(id){if(!E.l||E.l.id!==id)E={step:1,l:{...L.find(x=>x.id===id)}}}
  const l=E.l;
  return `<div class="head"><div><button class="btn ghost" style="padding-left:0" onclick="go('nabidky')">${ic('back')}Zpět na nabídky</button>
- <h1 class="h1">${l.isNew?'Nová nemovitost':l.t}</h1><p class="sub">${l.isNew?'Vyplňte postupně 5 kroků. Rozpracované se ukládá samo.':'Úpravy se po uložení samy pošlou na Sreality i na web.'}</p></div>
- ${l.isNew?'':`<div class="acts"><button class="btn" onclick="go('web')">${ic('eye')}Jak to vypadá na webu</button></div>`}</div>
+ <h1 class="h1">${l.isNew?'Nová nemovitost':l.t}</h1><p class="sub">${l.isNew?'Jen 5 krátkých kroků. Vyplňujete jen to, co opravdu potřebujete. Rozpracované se ukládá samo.':E.kopie?'Kopie staré nabídky: fotky, popis i majitel jsou převzaté. Zkontrolujte cenu a zveřejněte.':'Úpravy se po uložení samy pošlou na Sreality i na web.'}</p></div>
+ ${l.isNew?'':`<div class="acts">${l.stav==='Realizováno'?`<button class="btn pri" onclick="znovu(${l.id})">${ic('refresh')}Znovu nabídnout</button>`:''}<button class="btn" onclick="go('web')">${ic('eye')}Jak to vypadá na webu</button></div>`}</div>
  <div class="steps">${steps.map((s,i)=>`<div class="step ${E.step===i+1?'on':''} ${E.step>i+1||(!l.isNew&&E.step!==i+1)?'ok':''}" onclick="E.step=${i+1};go('editor')"><span class="n">${E.step>i+1||(!l.isNew&&E.step!==i+1)?'✓':i+1}</span>${s}</div>`).join('')}</div>
  <div class="card" style="padding:1.5rem">${stepHtml(E.step,l)}
   <div class="footer-bar">
@@ -386,38 +423,58 @@ V.editor=id=>{
    ${E.step<5?`<button class="btn big pri" onclick="E.step++;go('editor')">Pokračovat: ${steps[E.step]} ${ic('arrow')}</button>`:''}
   </div></div>`;
 };
+const ADR=[['Nová 802/22','Třebíč – Nové Dvory','674 01'],['Nová 8','Třebíč – Vnitřní Město','674 01'],['Nová Čtvrť 315','Stařeč','675 22'],['Okružní 935','Třebíč – Borovina','674 01'],['Okružní 1218','Třebíč – Borovina','674 01'],['Řípovská 1102','Třebíč – Borovina','674 01'],['Nádražní 1061','Třebíč – Horka-Domky','674 01'],['Lidická 1009','Třebíč – Nové Dvory','674 01'],['Karlovo nám. 26/20','Třebíč – Vnitřní Město','674 01'],['Slunná 1420','Třebíč – Podklášteří','674 01']];
+function adrHledat(q){const box=document.getElementById('adrList');q=q.trim().toLowerCase();
+ const r=q.length<2?[]:ADR.filter(a=>(a[0]+' '+a[1]).toLowerCase().includes(q)).slice(0,5);
+ box.innerHTML=r.map(a=>`<div onclick="adrVyber('${a[0]}','${a[1]}','${a[2]}')">${ic('pin','style="width:1.1rem;height:1.1rem;color:#0070D6"')}<span><b>${a[0]}</b>, ${a[1]}</span><small>${a[2]}</small></div>`).join('')||(q.length>=2?'<div style="cursor:default" class="muted">Nic nenalezeno. Zkuste jen název ulice.</div>':'');
+ box.classList.toggle('show',q.length>=2)}
+function adrVyber(u,o,psc){document.getElementById('adr').value=u+', '+o+', '+psc;document.getElementById('adrList').classList.remove('show');E.l.ulice=u;E.l.obec=o;
+ document.getElementById('adrHint').innerHTML='<span style="color:#12A150;font-weight:600">✓ Adresa ověřena v registru adres. Na mapě i na Sreality se ukáže správně.</span>'}
+function updCnt(){document.getElementById('cntN').textContent=L.filter(l=>l.stav!=='Realizováno').length;document.getElementById('cntA').textContent=L.filter(l=>l.stav==='Realizováno').length}
+V.archiv=()=>{filt='Realizováno';return V.nabidky()};
 function pick(el,name,val){E.l[name]=val;[...el.parentElement.children].forEach(c=>c.classList.toggle('on',c===el))}
 function seg(name,opts,val){return `<div class="seg">${opts.map(o=>`<button class="${o===val?'on':''}" onclick="pick(this,'${name}','${o}')">${o}</button>`).join('')}</div>`}
 function stepHtml(s,l){
  if(s===1)return `<div class="form">
-  <div class="f full"><label>Co nabízíte?</label>${seg('typ',['Prodej','Pronájem','Dražba'],l.typ)}</div>
-  <div class="f full"><label>Druh nemovitosti</label><div class="tiles">${[['Byt','flat'],['Dům','home'],['Pozemek','land'],['Komerční','shop'],['Ostatní','dots']].map(([n,i])=>`<div class="tile ${l.druh===n?'on':''}" onclick="pick(this,'druh','${n}')">${ic(i)}${n}</div>`).join('')}</div></div>
-  <div class="f full"><label>Název inzerátu</label><input class="in" value="${l.t}" placeholder="např. Prodej bytu 2+kk v Třebíči, ul. Řípovská"><span class="hint">Tip: Začněte druhem a dispozicí, potom místo. Tak to lidé na Sreality hledají.</span></div>
-  <div class="f"><label>Obec</label><input class="in" value="${l.obec}"><span class="hint">Adresu ověříme v registru adres (RÚIAN) automaticky.</span></div>
-  <div class="f"><label>Ulice a číslo</label><input class="in" value="${l.ulice}" placeholder="např. Řípovská 12"></div>
-  <div class="f"><label>Cena</label><input class="in" value="${l.cena?l.cena.toLocaleString('cs-CZ'):''}" placeholder="např. 2 990 000"><span class="hint">Nechte prázdné, pokud chcete „Cena v RK“.</span></div>
-  <div class="f"><label>Poznámka k ceně</label><select class="in"><option>včetně provize</option><option>+ provize RK</option><option>k jednání</option></select></div>
- </div>`;
- if(s===2)return `<div class="form">
+  <div class="f"><label>Co nabízíte?</label>${seg('typ',['Prodej','Pronájem','Dražba'],l.typ)}</div>
+  <div class="f"><label>Výhradní smlouva?</label>${seg('vyhr',['Ano','Ne'],l.vyhr||'Ano')}</div>
+  <div class="f full"><label>Druh nemovitosti</label><div class="tiles">${[['Byt','flat'],['Dům','home'],['Pozemek','land'],['Komerční','shop'],['Ostatní','dots']].map(([n,i])=>`<div class="tile ${l.druh===n?'on':''}" onclick="pick(this,'druh','${n}');go('editor',undefined,true)">${ic(i)}${n}</div>`).join('')}</div></div>
   ${l.druh==='Byt'?`<div class="f full"><label>Dispozice</label>${seg('disp',['1+kk','1+1','2+kk','2+1','3+kk','3+1','4+kk','4+1','větší'],l.disp)}</div>`:''}
-  <div class="f"><label>Užitná plocha</label><input class="in" value="${l.plocha}" placeholder="m²"></div>
-  <div class="f"><label>Plocha pozemku</label><input class="in" placeholder="m²"></div>
-  <div class="f"><label>Stav objektu</label><select class="in"><option>Velmi dobrý</option><option>Po rekonstrukci</option><option>Novostavba</option><option>Dobrý</option><option>Před rekonstrukcí</option></select></div>
-  <div class="f"><label>Vlastnictví</label>${seg('vl',['Osobní','Družstevní','Obecní'],l.vl||'Osobní')}</div>
-  <div class="f"><label>Energetická třída (PENB)</label>${seg('penb',['A','B','C','D','E','F','G'],l.penb||'C')}</div>
-  <div class="f"><label>Patro</label><input class="in" placeholder="např. 3. z 8"></div>
-  <div class="f full"><label>Vybavení</label><div class="seg">${['Výtah','Sklep','Balkon','Lodžie','Terasa','Garáž','Parkování','Zahrada'].map((o,i)=>`<button class="${[0,1,6].includes(i)?'on':''}" onclick="this.classList.toggle('on')">${o}</button>`).join('')}</div></div>
+  <div class="f full" style="position:relative"><label>Adresa</label>
+   <input class="in" id="adr" autocomplete="off" value="${l.ulice?(l.ulice+', '+l.obec):''}" placeholder="Začněte psát ulici, např. „Nová 8“" oninput="adrHledat(this.value)" style="font-size:1.05rem">
+   <div id="adrList" class="adr-list"></div>
+   <span class="hint" id="adrHint">${l.ulice?'<span style="color:#12A150;font-weight:600">✓ Adresa ověřena v registru adres</span>':'Stačí napsat pár písmen. Adresu najdeme v registru sami, nic nemusíte dohledávat.'}</span></div>
+  <div class="f"><label>Číslo bytové jednotky <span class="muted" style="font-weight:400">(jen u bytů)</span></label><input class="in" placeholder="např. 802/12"></div>
+  <div class="f"><label>Plocha</label><input class="in" value="${l.plocha}" placeholder="m²"></div>
+  <div class="f full"><label>Název inzerátu</label><input class="in" value="${l.t}" placeholder="Vytvoříme sami z údajů výše, např. „Prodej bytu 2+kk v Třebíči, ul. Nová“"><span class="hint">Nemusíte vyplňovat. Název složíme tak, jak to lidé na Sreality hledají.</span></div>
+  <details class="f full more"><summary>${ic('dots')}Další parametry <span class="muted" style="font-weight:400">– nepovinné (sítě, rok výstavby, PENB, patro, vybavení…)</span></summary>
+   <div class="form" style="margin-top:1rem">
+    <div class="f"><label>Stav objektu</label><select class="in"><option>Velmi dobrý</option><option>Po rekonstrukci</option><option>Novostavba</option><option>Dobrý</option><option>Před rekonstrukcí</option></select></div>
+    <div class="f"><label>Vlastnictví</label>${seg('vl',['Osobní','Družstevní','Obecní'],l.vl||'Osobní')}</div>
+    <div class="f"><label>Energetická třída (PENB)</label>${seg('penb',['A','B','C','D','E','F','G'],l.penb||'C')}</div>
+    <div class="f"><label>Patro</label><input class="in" placeholder="např. 3. z 8"></div>
+    <div class="f"><label>Rok výstavby</label><input class="in" placeholder="např. 1978"></div>
+    <div class="f"><label>Sítě</label><div class="seg">${['Voda','Kanalizace','Plyn','Elektřina'].map(o=>`<button onclick="this.classList.toggle('on')">${o}</button>`).join('')}</div></div>
+    <div class="f full"><label>Vybavení</label><div class="seg">${['Výtah','Sklep','Balkon','Lodžie','Terasa','Garáž','Parkování','Zahrada'].map((o,i)=>`<button class="${[0,1,6].includes(i)?'on':''}" onclick="this.classList.toggle('on')">${o}</button>`).join('')}</div></div>
+   </div></details>
  </div>`;
- if(s===3){const imgs=l.img?[l.img,...['22610613','22385984','21542180','22896869','22989849'].filter(x=>x!==l.img)].slice(0,5):[];return `
+ if(s===3)return `<div class="form">
+  <div class="f"><label>Cena${l.typ==='Pronájem'?' za měsíc':''}</label><input class="in" style="font-size:1.15rem;font-weight:600" value="${l.cena?l.cena.toLocaleString('cs-CZ'):''}" placeholder="${l.typ==='Pronájem'?'např. 12 500':'např. 2 990 000'}"><span class="hint">Nechte prázdné, pokud chcete „Cena v RK“.</span></div>
+  <div class="f"><label>Poznámka k ceně</label><select class="in">${(l.typ==='Pronájem'?['+ energie','+ energie + provize','včetně energií']:['včetně provize','+ provize RK','k jednání']).map(o=>`<option>${o}</option>`).join('')}</select></div>
+  <div class="f"><label>Provize ${ic('shield','style="width:1rem;height:1rem;vertical-align:-3px;color:#8A93A1"')}</label><input class="in" placeholder="např. 3 % nebo 1 nájem"><span class="hint">Jen pro vás. Nikde se nezveřejní.</span></div>
+  <div class="f"><label>Makléř</label><select class="in"><option>RD (já)</option><option>Kolega / kolegyně…</option></select><span class="hint">Jeho jméno a telefon se ukáže u inzerátu.</span></div>
+  <div class="f full"><label>Majitel</label>
+   ${l.isNew?`<div class="form"><input class="in" placeholder="Jméno a příjmení"><input class="in" placeholder="Telefon"></div><span class="hint">Nebo <a href="#" onclick="toast('Zde by se otevřel výběr z kontaktů.');return false">vybrat z kontaktů</a>. Uloží se do Kontaktů automaticky.</span>`
+   :`<div class="match" style="margin:0"><span class="ini" style="background:#E6F3FF;color:#0070D6;margin:0">JK</span><div class="small"><b>Josef Krejčí</b><br><span class="muted">603 555 210 · majitel</span></div><button class="btn" style="margin-left:auto" onclick="toast('Zde by se dal majitel změnit.')">Změnit</button></div>`}</div>
+ </div>`;
+ if(s===2){const imgs=l.img?[l.img,...['22610613','22385984','21542180','22896869','22989849'].filter(x=>x!==l.img)].slice(0,5):[];return `
   <p class="muted" style="margin-top:0">Fotky sem jednoduše přetáhněte z počítače nebo z mobilu. Pořadí změníte přetažením. <b>První fotka</b> je hlavní na Sreality i na webu.</p>
   <div class="photos">${imgs.map((m,i)=>`<div class="ph"><img src="${IMG[m]}"><span class="b">${i===0?'<span class="pill p-blue" style="background:#fff">★ Hlavní fotka</span>':''}</span><span class="x">${i+1}</span></div>`).join('')}
    <div class="drop" onclick="toast('Zde by se otevřel výběr fotek z počítače.')">${ic('upload','style="width:2rem;height:2rem"')}Přidat fotky<span class="small muted" style="font-weight:400">přetáhněte sem nebo klikněte</span></div></div>
   <div class="banner blue mt"><div class="big">${ic('spark','style="color:#0070D6"')}</div><div><b>Fotky upravíme za vás</b>Systém je sám otočí, zmenší a srovná jas. Sreality dostanou přesně ten formát, jaký vyžadují.</div></div>`}
  if(s===4)return `<div class="f full"><label>Popis nemovitosti</label>
   <textarea class="in" id="popis">${l.popis||(l.isNew?'':'Ve výhradním zastoupení nabízíme '+l.t.toLowerCase().replace('prodej ','')+'. ')}</textarea>
-  <div class="flex"><span class="hint">Doporučujeme alespoň 600 znaků.</span><button class="btn" style="margin-left:auto" onclick="aiText()">${ic('spark')}Pomoct s textem</button></div></div>
-  <div class="form mt"><div class="f"><label>Interní poznámka (nikde se nezveřejní)</label><input class="in" placeholder="např. klíče u sousedky, volat po 16:00"></div>
-  <div class="f"><label>Majitel</label><input class="in" value="${l.isNew?'':'Vybrat z kontaktů…'}" placeholder="Vybrat z kontaktů…"></div></div>`;
+  <div class="flex"><span class="hint">Doporučujeme alespoň 600 znaků.</span><button class="btn" style="margin-left:auto" onclick="aiText()">${ic('spark')}Pomoct s textem</button></div></div>`;
  if(s===5)return `
   <p class="muted" style="margin-top:0">Vyberte, kde se má nabídka objevit. Jedním tlačítkem ji pošlete všude najednou.</p>
   <div class="pub">
@@ -425,6 +482,7 @@ function stepHtml(s,l){
    ${pubCard('web','trebic-reality.cz','#003483','D','Váš vlastní web. Objeví se ihned.',l)}
    ${pubCard('idnes','Reality iDNES','#1B1F27','iD','Další portál, placený zvlášť.',l)}
   </div>
+  <label class="li mt" style="cursor:pointer;align-items:center;border:1.5px solid #D5DBE3;border-radius:12px;padding:.9rem 1rem"><input type="checkbox" style="width:20px;height:20px"><div><b>Topovat na Sreality</b><div class="small muted">Inzerát se posune nahoru ve výsledcích. Placené zvlášť, podle ceníku Sreality.</div></div><select class="in" style="margin-left:auto;max-width:200px" onclick="event.stopPropagation()"><option>Jednou teď</option><option>Každý týden</option><option>Každé 3 dny</option></select></label>
   <div class="progress" id="prog"></div>
   <div class="flex mt2"><button class="btn big pri" id="pubBtn" onclick="publish()">${ic('upload')}${l.isNew?'Zveřejnit nabídku':'Uložit a aktualizovat všude'}</button><span class="muted small">Pokud se něco nepovede, systém vám to řekne česky a my to opravíme.</span></div>`;
 }
@@ -437,8 +495,9 @@ function publish(){
  p.innerHTML=targets.map(t=>`<div class="pg" id="pg-${t[0]}"><span class="spin"></span>Odesílám na <b>${t[1]}</b><span class="st muted small">kontroluji údaje…</span></div>`).join('');
  targets.forEach((t,i)=>setTimeout(()=>{const e=document.getElementById('pg-'+t[0]);if(!e)return;e.innerHTML=`${ic('check','style="color:#12A150"')}<b>${t[1]}</b>&nbsp;– hotovo<span class="st"><span class="pill p-ok">Zveřejněno</span></span>`;
   if(i===targets.length-1){p.insertAdjacentHTML('beforeend',`<div class="banner ok mt"><div class="big">${ic('check','style="color:#12A150"')}</div><div><b>Hotovo. Nabídka je všude aktuální.</b>Na Sreality se změna projeví do 15 minut, na webu hned.</div><button class="btn" style="margin-left:auto" onclick="go('nabidky')">Zpět na nabídky</button></div>`);
-   if(l.isNew){l.id=L.length+1;l.img='22082372';l.t=l.t||'Nová nemovitost';l.stav='Aktivní';l.views=0;l.zajem=0;l.novy=true;delete l.isNew;L.unshift({...l});document.getElementById('cntN').textContent=L.length}
-   else{const o=L.find(x=>x.id===l.id);Object.assign(o,l)}
+   if(l.isNew){l.id=Math.max(...L.map(x=>x.id))+1;l.img='22082372';l.t=l.t||'Nová nemovitost';l.stav='Aktivní';l.views=0;l.zajem=0;l.novy=true;delete l.isNew;L.unshift({...l})}
+   else{l.stav=l.stav==='Příprava'?'Aktivní':l.stav;const o=L.find(x=>x.id===l.id);Object.assign(o,l)}
+   updCnt()
    toast('Nabídka byla zveřejněna.')}
  },900+i*900));
 }
@@ -515,7 +574,7 @@ V.web=()=>{const a=L.filter(l=>l.stav==='Aktivní'&&l.web==='ok');return `
   <div class="whero"><h2>Realitní kancelář Dvořák s.r.o.</h2><div style="opacity:.9">Prodej, nákup a pronájem nemovitostí na Vysočině již od roku 1993.</div>
    <div class="wsearch"><div>Druh ▾</div><div>Obec ▾</div><div>Prodej / Pronájem ▾</div><b>Vyhledat</b></div></div>
   <div style="padding:1.5rem 1.5rem 0;font-weight:700;font-size:1.2rem;color:var(--dv)">Naše nabídka</div>
-  <div class="wgrid">${a.slice(0,6).map(l=>`<div class="wc"><img src="${IMG[l.img]}"><div><b class="small">${l.t}</b><div class="small muted">${l.obec} · ${l.plocha}</div><div class="p">${kc(l.cena)}</div></div></div>`).join('')}</div>
+  <div class="wgrid">${a.slice(0,6).map(l=>`<div class="wc"><img src="${IMG[l.img]}"><div><b class="small">${l.t}</b><div class="small muted">${l.obec} · ${l.plocha}</div><div class="p">${cena(l)}</div></div></div>`).join('')}</div>
  </div>
  <p class="small muted">Náhled je orientační. Design webu bychom připravili nový, moderní a dobře čitelný i na mobilu. Barvy a logo kanceláře zůstanou.</p>`};
 
@@ -535,14 +594,31 @@ V.napoveda=()=>`<div class="head"><div><h1 class="h1">Nápověda a podpora</h1><
    <div class="li"><div class="ic" style="background:#E6F3FF;color:#0070D6">${ic('globe')}</div><div><b>Web trebic-reality.cz</b><br><span class="muted">design, obsah, hosting</span></div><span class="pill p-ok" style="margin-left:auto">my</span></div>
   </div></div>
  </div>
+ <div class="grid g2 mt">
+  <div class="card"><h3 class="flex">${ic('globe','style="color:#0070D6"')}Jak se sem dostanete</h3>
+   <p class="muted" style="margin-top:0">Nic se neinstaluje. Systém je obyčejná webová stránka, stačí na ni kliknout.</p>
+   <div class="linkbox">${ic('shield','style="color:#12A150"')}sprava.trebic-reality.cz<button class="btn" style="margin-left:auto" onclick="toast('Odkaz zkopírován.')">${ic('copy')}Kopírovat</button></div>
+   <div class="list small">
+    <div class="li"><div class="ic" style="background:#E6F3FF;color:#0070D6">${ic('home')}</div><div><b>Na počítači:</b> ikona „Dvořák Kancelář“ na ploše. Nastavíme vám ji při předání.</div></div>
+    <div class="li"><div class="ic" style="background:#E6F3FF;color:#0070D6">${ic('phone')}</div><div><b>Na mobilu:</b> ikona na ploše telefonu, jako běžná aplikace.</div></div>
+    <div class="li"><div class="ic" style="background:#E4F6EC;color:#12A150">${ic('check')}</div><div><b>Přihlášení si pamatujeme.</b> Žádné heslo každý den. Když přijde nový počítač, pošleme vám odkaz e-mailem a jedním kliknutím jste zpátky.</div></div>
+   </div></div>
+  <div class="card"><h3 class="flex">${ic('refresh','style="color:#0070D6"')}Přechod z Igluu</h3>
+   <p class="muted" style="margin-top:0">Všechno přeneseme za vás. Nic nebudete přepisovat ručně.</p>
+   <div class="list small">
+    <div class="li"><div class="ic" style="background:#E4F6EC;color:#12A150">${ic('check')}</div><div><b>Všechny aktivní nabídky</b> včetně fotek, popisů, majitelů a čísel inzerátů.</div></div>
+    <div class="li"><div class="ic" style="background:#E4F6EC;color:#12A150">${ic('check')}</div><div><b>Celá historie realizovaných</b> do Archivu, abyste mohli byt kdykoli znovu nabídnout.</div></div>
+    <div class="li"><div class="ic" style="background:#E4F6EC;color:#12A150">${ic('check')}</div><div><b>Inzeráty na Sreality nespadnou.</b> Přepneme je bez výpadku, staré odkazy na webu budou dál fungovat.</div></div>
+   </div></div>
+ </div>
  <div class="card mt"><h3>Krátká video-návody</h3><div class="grid g3">
-  ${['Jak přidat novou nemovitost (3 min)','Jak změnit cenu nebo dát slevu (1 min)','Jak označit nemovitost jako prodanou (1 min)','Jak přidat a seřadit fotky (2 min)','Jak naplánovat prohlídku (2 min)','Jak poslat nabídky zájemci (1 min)'].map(t=>`<div class="li" style="border:1px solid var(--line);border-radius:10px;padding:.8rem;cursor:pointer;align-items:center" onclick="toast('Zde by se přehrálo video: ${t}')"><div class="ic" style="background:#E6F3FF;color:#0070D6">${ic('play')}</div><b class="small">${t}</b></div>`).join('')}
+  ${['Jak přidat novou nemovitost (3 min)','Jak změnit cenu nebo dát slevu (1 min)','Jak označit nemovitost jako prodanou (1 min)','Jak znovu nabídnout uvolněný byt (1 min)','Jak přidat a seřadit fotky (2 min)','Jak naplánovat prohlídku (2 min)','Jak poslat nabídky zájemci (1 min)'].map(t=>`<div class="li" style="border:1px solid var(--line);border-radius:10px;padding:.8rem;cursor:pointer;align-items:center" onclick="toast('Zde by se přehrálo video: ${t}')"><div class="ic" style="background:#E6F3FF;color:#0070D6">${ic('play')}</div><b class="small">${t}</b></div>`).join('')}
  </div></div>`;
 function reportHtml(){return `<h2>Něco nefunguje?</h2><p class="muted">Napište vlastními slovy, co se stalo. Nemusíte znát technické výrazy. Snímek obrazovky přiložíme sami.</p>
  <textarea class="in" style="min-height:120px" placeholder="např. Na Sreality se neukazuje nová fotka u bytu Řípovská"></textarea>
  <div class="flex mt"><button class="btn" onclick="closeModal()">Zrušit</button><button class="btn pri" style="margin-left:auto" onclick="closeModal();toast('Díky! Hlášení máme. Ozveme se do 1 hodiny.')">Odeslat hlášení</button></div>`}
 
-go('prehled');
+updCnt();go('prehled');
 </script>
 </body>
 </html>
