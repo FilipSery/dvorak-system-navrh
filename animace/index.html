@@ -183,9 +183,9 @@ svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stro
 @keyframes rip{0%{transform:scale(.3);opacity:1}100%{transform:scale(2.2);opacity:0}}
 
 /* final */
-#finbg{position:fixed;inset:0;z-index:55;background:rgba(14,26,43,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity 1s}
+#finbg{display:none;position:fixed;inset:0;z-index:55;background:rgba(14,26,43,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity 1s}
 #finbg.on{opacity:1}
-#fin{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;pointer-events:none;transition:opacity 1s}
+#fin{position:absolute;inset:-3000px;z-index:60;background:rgba(14,26,43,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;pointer-events:none;transition:opacity 1s}
 #fin.on{opacity:1;pointer-events:auto}
 #fin .eb{font-size:14px;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--gold2)}
 #fin h1{font-family:Fraunces,serif;font-weight:300;font-size:92px;line-height:1;letter-spacing:-.035em;margin:18px 0}
@@ -203,9 +203,11 @@ svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stro
 .ctrl{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:12px;background:rgba(14,26,43,.75);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:8px 10px 8px 8px}
 .ctrl button{width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;display:grid;place-items:center;cursor:pointer}
 .ctrl button:hover{background:rgba(255,255,255,.2)}
-.ctrl .tl{width:240px;height:4px;border-radius:2px;background:rgba(255,255,255,.15);overflow:hidden}
-.ctrl .tl i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s linear}
-.ctrl .lbl{font-size:13px;font-weight:700;color:rgba(255,255,255,.7);min-width:70px}
+#seek{-webkit-appearance:none;appearance:none;width:min(420px,52vw);height:6px;border-radius:3px;outline:0;cursor:pointer;background:linear-gradient(90deg,var(--gold) var(--p,0%),rgba(255,255,255,.18) var(--p,0%))}
+#seek::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.4)}
+#seek::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--gold)}
+.ctrl .lbl{font-size:13px;font-weight:700;color:rgba(255,255,255,.7);min-width:92px;font-variant-numeric:tabular-nums}
+#cv.ff *,#cv.ff *::before,#cv.ff *::after{transition:none!important;animation:none!important}
 #start{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;background:rgba(14,26,43,.6);backdrop-filter:blur(6px);cursor:pointer;transition:opacity .6s}
 #start.gone{opacity:0;pointer-events:none}
 #start .pl{width:110px;height:110px;border-radius:50%;background:var(--gold);display:grid;place-items:center;box-shadow:0 0 0 0 rgba(184,146,90,.6);animation:pulse 2s infinite}
@@ -319,7 +321,7 @@ svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stro
 
 <div id="finbg"></div>
 <div id="start" onclick="begin()"><div class="pl"><svg viewBox="0 0 24 24" width="44" height="44"><path d="M8 5v14l11-7z" fill="#fff"/></svg></div><b>Jak se nemovitost dostane<br>ze systému na web</b><span>Ukázka trvá zhruba minutu a čtvrt · klikněte pro spuštění</span></div>
-<div class="ctrl"><button id="bPlay" onclick="togglePause()" aria-label="Pauza"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 5h3v14H8zM13 5h3v14h-3z" fill="#fff"/></svg></button><button onclick="restart()" aria-label="Znovu"><svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg></button><div class="tl"><i id="tl"></i></div><span class="lbl" id="lbl">0:00</span></div>
+<div class="ctrl"><button id="bPlay" onclick="togglePause()" aria-label="Pauza"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 5h3v14H8zM13 5h3v14h-3z" fill="#fff"/></svg></button><button onclick="restart()" aria-label="Znovu"><svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg></button><input type="range" id="seek" min="0" max="1000" value="0" aria-label="Posun v animaci"><span class="lbl" id="lbl">0:00</span></div>
 
 <script src="../web/data.js"></script>
 <script>
@@ -342,20 +344,33 @@ $('#wDet').innerHTML=`<div><div class="w-gal">${D.foto.slice(0,3).map(f=>`<img s
  <div class="w-box"><div class="p">${pr(D)}</div><div class="ag"><div class="av">IP</div><div><b>${D.makler}</b><div style="font-size:13px;color:var(--tx3)">${D.tel}</div></div></div><div style="font-weight:800;margin-bottom:10px">Domluvit prohlídku</div><div class="w-btn">Chci na prohlídku</div></div>`;
 $('#fly img').src='../web/'+D.foto[0];
 
-/* ---- engine ---- */
-let paused=false,abort=false,elapsed=0,TOTAL=74000,last=performance.now();
-function tick(t){if(!paused&&started&&!finished)elapsed+=t-last;last=t;$("#tl").style.width=(finished?100:Math.min(98,elapsed/TOTAL*100))+"%";const s=Math.floor(elapsed/1000);$('#lbl').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');requestAnimationFrame(tick)}
-requestAnimationFrame(tick);
-let started=false,finished=false;
+/* ---- engine (s přetáčením) ----
+   Animace běží podle „virtuálního času“ vt. Posun na čas T = obnovit výchozí stav
+   a přehrát vše do T okamžitě (bez CSS přechodů), pak pokračovat normálně. */
+const INIT=cv.innerHTML;
 const SPEED=+(new URLSearchParams(location.search).get('speed')||0.75);
-function sleep(ms){return new Promise((res,rej)=>{let left=ms/SPEED,prev=performance.now();(function f(){if(abort)return rej('abort');const now=performance.now();if(!paused)left-=now-prev;prev=now;left<=0?res():requestAnimationFrame(f)})()})}
-function togglePause(){paused=!paused;$('#bPlay').innerHTML=paused?'<svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 5v14l11-7z" fill="#fff"/></svg>':'<svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 5h3v14H8zM13 5h3v14h-3z" fill="#fff"/></svg>';document.body.style.setProperty('--pp',paused?'paused':'running')}
-function restart(){location.reload()}
+let paused=false,started=false,finished=false,TOTAL=1,vt=0,ff=false,seekTo=0,gen=0,dragging=false;
+const fmtT=ms=>{const s=Math.max(0,Math.floor(ms/1000));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+function exitFF(){ff=false;void cv.offsetWidth;requestAnimationFrame(()=>cv.classList.remove('ff'))}
+function sleep(ms){
+ const D=ms/SPEED,g=gen;
+ if(ff){if(vt+D<=seekTo){vt+=D;return Promise.resolve()}const rest=vt+D-seekTo;vt=seekTo;exitFF();return wait(rest,g)}
+ return wait(D,g);
+}
+function wait(D,g){return new Promise((res,rej)=>{let left=D,prev=performance.now();(function f(){if(g!==gen)return rej('abort');const now=performance.now(),dt=now-prev;prev=now;if(!paused){const s=Math.min(dt,left);left-=s;vt+=s}left<=0?res():requestAnimationFrame(f)})()})}
+function tick(){const sk=$('#seek');if(!dragging&&TOTAL>1){sk.value=Math.round(Math.min(1,vt/TOTAL)*1000);$('#lbl').textContent=fmtT(vt)+' / '+fmtT(TOTAL)}sk.style.setProperty('--p',(sk.value/10)+'%');requestAnimationFrame(tick)}
+requestAnimationFrame(tick);
+function setPaused(p){paused=p;$('#bPlay').innerHTML=paused?'<svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 5v14l11-7z" fill="#fff"/></svg>':'<svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 5h3v14H8zM13 5h3v14h-3z" fill="#fff"/></svg>'}
+function togglePause(){if(!started)return begin();if(finished)return restart();setPaused(!paused)}
+function reset(){gen++;cv.innerHTML=INIT;$('#finbg').classList.remove('on');finished=false;vt=0}
+function play(from){reset();seekTo=from;ff=from>0;cv.classList.toggle('ff',ff);const g=gen;const p=run().then(()=>{if(ff)exitFF()});p.catch(e=>{if(e!=='abort')console.error(e)});return p}
+function restart(){setPaused(false);play(0)}
+function seekPct(p){if(!started){started=true;$('#start').classList.add('gone')}play(Math.min(TOTAL-1,TOTAL*p))}
 function pos(el,ox=.5,oy=.5){const r=el.getBoundingClientRect(),c=cv.getBoundingClientRect(),s=window._s;return [(r.left-c.left+r.width*ox)/s,(r.top-c.top+r.height*oy)/s]}
 let cx=800,cy=860;
 async function moveTo(el,ox,oy,d=800){const[x,y]=pos(el,ox,oy);$('#cur').style.transition=`transform ${d}ms cubic-bezier(.45,.05,.25,1)`;$('#cur').style.transform=`translate(${x-4}px,${y-3}px)`;cx=x;cy=y;await sleep(d)}
 async function click(el,ox,oy,d){await moveTo(el,ox,oy,d);const r=$('#cur .rip');r.classList.remove('go');void r.offsetWidth;r.classList.add('go');el.classList.add('pressed');await sleep(140);el.classList.remove('pressed');await sleep(120)}
-async function type(el,text,ms=45){el.classList.add('f');el.innerHTML='<span class="tx"></span><span class="car"></span>';const t=el.querySelector('.tx');for(const ch of text){t.textContent+=ch;await sleep(ch===' '?ms*1.6:ms*(.6+Math.random()*.8))}await sleep(150);el.querySelector('.car')?.remove();el.classList.remove('f')}
+async function type(el,text,ms=45){el.classList.add('f');el.innerHTML='<span class="tx"></span><span class="car"></span>';const t=el.querySelector('.tx');let i=0;for(const ch of text){t.textContent+=ch;i++;await sleep(ch===' '?ms*1.6:ms*(.6+((i*37)%10)/12.5))}await sleep(150);el.querySelector('.car')?.remove();el.classList.remove('f')}
 async function cap(n,html){$('#cap').classList.add('out');await sleep(380);$('#capN').textContent=n;$('#capT').innerHTML=html;$('#cap').classList.remove('out')}
 function pick(group,label){$$(group+' > *').forEach(e=>e.classList.toggle('on',e.textContent.trim()===label))}
 function step(n){$$('.st').forEach(s=>{const k=+s.dataset.s;s.classList.toggle('on',k===n);s.classList.toggle('ok',k<n);s.querySelector('.n').textContent=k<n?'✓':k});$$('.panel').forEach(p=>p.classList.toggle('hid',+p.dataset.p!==n))}
@@ -373,7 +388,7 @@ async function run(){
  await click(item('#sVyh','Ano'),.5,.5,600);pick('#sVyh','Ano');
  await click(item('#sDruh','Byt'),.5,.5,600);pick('#sDruh','Byt');
  await click(item('#sDisp','4+kk'),.5,.5,600);pick('#sDisp','4+kk');
- cap('Krok 1 · Základní údaje','Adresu stačí <em>začít psát</em>');
+ await cap('Krok 1 · Základní údaje','Adresu stačí <em>začít psát</em>');
  await click($('#iAdr'),.2,.5,700);
  await type($('#iAdr'),'Gen. Svo',90);
  $('#sugg').classList.add('on');await sleep(700);
@@ -398,7 +413,7 @@ async function run(){
  const words=POPIS.split(' ');for(const w of words){tx.textContent+=(tx.textContent?' ':'')+w;await sleep(55)}
  ta.querySelector('.car').remove();ta.classList.remove('f');
  await sleep(1100);
- await click($('#bNext'));step(5);await new Promise(r=>setTimeout(r,450));
+ await click($('#bNext'));step(5);await sleep(340);
  await cap('Krok 5 · Zveřejnění','Jedno tlačítko: <em>web i Sreality</em>');
  await click($('#pSr .sw'),.5,.5,900);$('#pSr').classList.add('on');
  await click($('#pWeb .sw'),.5,.5,800);$('#pWeb').classList.add('on');
@@ -448,12 +463,17 @@ async function run(){
  await sleep(2600);
  await moveTo($('#wDet .w-btn'),.5,.5,900);await sleep(900);
  /* ---- finále ---- */
- finished=true;$('#tl').style.width='100%';
+ finished=true;
  $('#cur').style.opacity=0;$('#cap').classList.add('out');
  $("#finbg").classList.add("on");$("#fin").classList.add("on");
 }
-function begin(){if(started)return;started=true;$('#start').classList.add('gone');last=performance.now();window._p=run();window._p.catch(e=>{if(e!=='abort')console.error(e)})}
-if(new URLSearchParams(location.search).has('auto'))setTimeout(begin,400);
+function begin(){if(started)return;started=true;$('#start').classList.add('gone');setPaused(false);window._p=play(0)}
+/* délka animace: jednou ji „přehrajeme“ naprázdno */
+(async()=>{seekTo=Infinity;ff=true;cv.classList.add('ff');const g=gen;try{await run()}catch(e){}TOTAL=vt;reset();cv.classList.remove('ff');ff=false;$('#lbl').textContent='0:00 / '+fmtT(TOTAL);
+ if(new URLSearchParams(location.search).has('auto'))setTimeout(begin,300)})();
+const sk=$('#seek');
+sk.addEventListener('input',()=>{dragging=true;$('#lbl').textContent=fmtT(TOTAL*sk.value/1000)+' / '+fmtT(TOTAL)});
+sk.addEventListener('change',()=>{dragging=false;seekPct(sk.value/1000)});
 </script>
 </body>
 </html>
