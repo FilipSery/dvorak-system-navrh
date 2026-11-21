@@ -398,7 +398,7 @@ async function run(){
  const words=POPIS.split(' ');for(const w of words){tx.textContent+=(tx.textContent?' ':'')+w;await sleep(55)}
  ta.querySelector('.car').remove();ta.classList.remove('f');
  await sleep(1100);
- await click($('#bNext'));step(5);
+ await click($('#bNext'));step(5);await new Promise(r=>setTimeout(r,450));
  await cap('Krok 5 · Zveřejnění','Jedno tlačítko: <em>web i Sreality</em>');
  await click($('#pSr .sw'),.5,.5,900);$('#pSr').classList.add('on');
  await click($('#pWeb .sw'),.5,.5,800);$('#pWeb').classList.add('on');
