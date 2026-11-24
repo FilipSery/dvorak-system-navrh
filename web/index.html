@@ -482,6 +482,7 @@ textarea.in{min-height:120px;resize:vertical}
 }
 @media (max-width:400px){.logo .wm small{display:none}.hdr .hin{gap:.5rem}.hdr-r{gap:.4rem}.fav-btn,.burger{width:40px;height:40px}.ribbon{font-size:.74rem}}
 </style>
+<script src="../stat.js"></script>
 </head>
 <body>
 
@@ -766,7 +767,7 @@ const ICO = {
 };
 const ic = (k,st='') => `<svg class="ico" viewBox="0 0 24 24" ${st}>${ICO[k]}</svg>`;
 function toast(t){const e=$('#toast');$('#toastT').textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),3400)}
-function sent(ev,msg){ev.preventDefault();const f=ev.target;f.reset&&f.reset();toast(msg)}
+function sent(ev,msg){ev.preventDefault();const f=ev.target;const sb=f.querySelector('[type=submit]');stat.event('web – odeslán formulář: '+(sb?sb.textContent.trim():''));f.reset&&f.reset();toast(msg)}
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 
 /* ============ ribbon & header ============ */
@@ -971,8 +972,8 @@ function closeDetail(){history.pushState(null,'',location.pathname+location.sear
 function share(){const u=location.href;if(navigator.share){navigator.share({title:curD.titul,url:u}).catch(()=>{})}else{navigator.clipboard?.writeText(u).then(()=>toast('Odkaz zkopírován. Můžete ho poslat komukoli.'),()=>toast(u))}}
 function route(){
  const m=location.hash.match(/^#\/nemovitost\/(\d+)/);const d=$('#detail');
- if(m&&byId(m[1])){renderDetail(byId(m[1]));reveal();d.scrollTop=0;d.classList.add('open');document.body.style.overflow='hidden';document.title=byId(m[1]).titul+' · Reality Dvořák'}
- else{d.classList.remove('open');document.body.style.overflow='';document.title='Reality Dvořák · Třebíč a Vysočina od roku 1993';lbClose()}
+ if(m&&byId(m[1])){renderDetail(byId(m[1]));reveal();d.scrollTop=0;d.classList.add('open');document.body.style.overflow='hidden';document.title=byId(m[1]).titul+' · Reality Dvořák';stat.view('/web/nemovitost/'+m[1],document.title)}
+ else{d.classList.remove('open');document.body.style.overflow='';document.title='Reality Dvořák · Třebíč a Vysočina od roku 1993';lbClose();stat.view('/web/','Web: úvod')}
 }
 addEventListener('hashchange',route);
 /* lightbox */
@@ -984,6 +985,7 @@ addEventListener('keydown',e=>{if($('#lb').classList.contains('open')){if(e.key=
 let tx=null;$('#lb').addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});$('#lb').addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40)lbMove(dx<0?1:-1);tx=null});
 
 /* init */
+stat.clicks('web');
 syncFilters();render();vShow();reveal();route();
 </script>
 </body>

@@ -215,6 +215,8 @@ svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stro
 #start b{font-family:Fraunces,serif;font-weight:300;font-size:40px;text-align:center;line-height:1.1;padding:0 20px}
 #start span{color:rgba(255,255,255,.7);font-weight:600}
 </style>
+<script src="../stat.js"></script>
+<script>stat.view('/animace/','Animace')</script>
 </head>
 <body>
 <div id="cv">
@@ -365,7 +367,7 @@ function togglePause(){if(!started)return begin();if(finished)return restart();s
 function reset(){gen++;cv.innerHTML=INIT;$('#finbg').classList.remove('on');finished=false;vt=0}
 function play(from){reset();seekTo=from;ff=from>0;cv.classList.toggle('ff',ff);const g=gen;const p=run().then(()=>{if(ff)exitFF()});p.catch(e=>{if(e!=='abort')console.error(e)});return p}
 function restart(){setPaused(false);play(0)}
-function seekPct(p){if(!started){started=true;$('#start').classList.add('gone')}play(Math.min(TOTAL-1,TOTAL*p))}
+function seekPct(p){stat.event('animace – přetáčení',1);if(!started){started=true;$('#start').classList.add('gone')}play(Math.min(TOTAL-1,TOTAL*p))}
 function pos(el,ox=.5,oy=.5){const r=el.getBoundingClientRect(),c=cv.getBoundingClientRect(),s=window._s;return [(r.left-c.left+r.width*ox)/s,(r.top-c.top+r.height*oy)/s]}
 let cx=800,cy=860;
 async function moveTo(el,ox,oy,d=800){const[x,y]=pos(el,ox,oy);$('#cur').style.transition=`transform ${d}ms cubic-bezier(.45,.05,.25,1)`;$('#cur').style.transform=`translate(${x-4}px,${y-3}px)`;cx=x;cy=y;await sleep(d)}
@@ -463,11 +465,11 @@ async function run(){
  await sleep(2600);
  await moveTo($('#wDet .w-btn'),.5,.5,900);await sleep(900);
  /* ---- finále ---- */
- finished=true;
+ finished=true;if(started)stat.event('animace – dokoukáno',1);
  $('#cur').style.opacity=0;$('#cap').classList.add('out');
  $("#finbg").classList.add("on");$("#fin").classList.add("on");
 }
-function begin(){if(started)return;started=true;$('#start').classList.add('gone');setPaused(false);window._p=play(0)}
+function begin(){if(started)return;started=true;stat.event('animace – spuštěno',1);$('#start').classList.add('gone');setPaused(false);window._p=play(0)}
 /* délka animace: jednou ji „přehrajeme“ naprázdno */
 (async()=>{seekTo=Infinity;ff=true;cv.classList.add('ff');const g=gen;try{await run()}catch(e){}TOTAL=vt;reset();cv.classList.remove('ff');ff=false;$('#lbl').textContent='0:00 / '+fmtT(TOTAL);
  if(new URLSearchParams(location.search).has('auto'))setTimeout(begin,300)})();

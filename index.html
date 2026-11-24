@@ -224,6 +224,7 @@ details.more[open]{border-style:solid}
 @media (max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.g2,.g3,.pub,.wgrid{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(3,1fr)}.photos{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:760px){.app{flex-direction:column}.side{width:100%;height:auto;position:sticky;top:64px;z-index:15;flex-direction:row;overflow-x:auto;padding:.5rem .75rem;border-right:0;border-bottom:1px solid var(--line);gap:.35rem}.side .label,.side .sep,.side .sync,.nav .cnt{display:none}.side .add{margin:0;padding:.55rem .8rem;white-space:nowrap;flex:none}.nav{white-space:nowrap;flex:none;padding:.55rem .75rem}.top .tbtn:first-child{display:none}.cal{overflow-x:auto;grid-template-columns:44px repeat(5,minmax(110px,1fr))}main{padding:1rem}.form{grid-template-columns:1fr}.row{grid-template-columns:1fr}.thumb{width:100%;height:170px}.row .side-r{align-items:flex-start}.top .search{display:none}}
 </style>
+<script src="stat.js"></script>
 </head>
 <body>
 <div class="concept">Ukázka návrhu: Systém pro Reality Dvořák (správa nemovitostí, Sreality a web na jednom místě). Jde o vizualizaci, data jsou ilustrační.</div>
@@ -326,7 +327,7 @@ let big=false;document.getElementById('fontBtn').onclick=()=>{big=!big;document.
 
 const V={};
 let cur='prehled';
-function go(v,arg,keep){const y=window.scrollY;cur=v;const hv=(v==='nabidky'&&filt==='Realizováno')?'archiv':v==='editor'?(E.l&&E.l.stav==='Realizováno'?'archiv':'nabidky'):v;document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('on',n.dataset.v===hv));document.getElementById('view').innerHTML=V[v](arg);window.scrollTo(0,keep?y:0);if(V[v].after)V[v].after(arg)}
+function go(v,arg,keep){const y=window.scrollY;cur=v;const hv=(v==='nabidky'&&filt==='Realizováno')?'archiv':v==='editor'?(E.l&&E.l.stav==='Realizováno'?'archiv':'nabidky'):v;document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('on',n.dataset.v===hv));document.getElementById('view').innerHTML=V[v](arg);window.scrollTo(0,keep?y:0);if(V[v].after)V[v].after(arg);stat.view('/system/'+v,'Systém: '+v)}
 document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{if(n.dataset.v==='nabidky'){filt='Aktivní';ftyp='Vše';fq=''}if(n.dataset.v==='archiv'){ftyp='Vše';fq=''}go(n.dataset.v)});
 
 /* ---------- PŘEHLED ---------- */
@@ -613,6 +614,7 @@ function reportHtml(){return `<h2>Něco nefunguje?</h2><p class="muted">Napište
  <textarea class="in" style="min-height:120px" placeholder="např. Na Sreality se neukazuje nová fotka u bytu Řípovská"></textarea>
  <div class="flex mt"><button class="btn" onclick="closeModal()">Zrušit</button><button class="btn pri" style="margin-left:auto" onclick="closeModal();toast('Díky! Hlášení máme. Ozveme se do 1 hodiny.')">Odeslat hlášení</button></div>`}
 
+stat.clicks('system');
 updCnt();go('prehled');
 </script>
 </body>
